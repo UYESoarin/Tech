@@ -29,6 +29,7 @@
 |`touch [doc name]`|make|
 |`rm [doc name]`|delete|
 |`cat [doc name]`|read|
+|`less [doc name]`|scroll read `q` quit|
 |`vim [doc name]`|edit|
 |`cp [src doc] [dist doc]`|copy|
 |`mv [src doc] [dist doc]`|move / rename|
@@ -74,6 +75,7 @@
 |op|shell|
 |:--:|:--:|
 |EditMode|`i`|
+|SearchMode|`/`|
 |NormalMode|`esc`|
 |CtrlMode|`:`|
 |Save|`:w`|
@@ -93,11 +95,13 @@
 |`sudo systemctl status nginx`||
 |`sudo systemctl enable nginx`, `sudo systemctl disable nginx`|auto start|
 
-* **Page**
+* **Page Configure**
 
-1. etc/nginx/sites-available/default
-2. var/www/html/index.nginx-debian.html
-3. virtual machine: http://127.0.0.1:8080
+1. **default** `etc/nginx/sites-available/default` -- `var/www/html/index.nginx-debian.html`
+2. **web addr (IP + port + doc)**: http://127.0.0.1:8080
+3. **personal configure**`:  sudo vim /etc/nginx/sites-enabled/default`: root /var/www/html -- root /home/[user dir]/[new dir]
+4. **reload**: `sudo nginx -t`, `sudo systemctl reload nginx`
+5. **permission**: `sudo chmod o+x /home/[name]`
 
 ## 5. Git
 
@@ -117,3 +121,6 @@
 |`git remote add origin git@github.com:[name]/[dir name].git` <br> `git remote -v`|**link** remote repo|
 |`git branch`|branch name `main`/`master`|
 |`git push -u origin [branch name]`|`-u` first time <br> **add - commit - push**|
+|`git clone git@github.com:[name]/[repo name].git`|**clone** to server|
+|`git pull`||
+|`git checkout`|discard not committed|
