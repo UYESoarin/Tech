@@ -2,6 +2,8 @@
 
 ## 1. Command
 
+#### 0. `help`
+
 #### 1. SystemInfo
 |cmd|note|
 |:-:|:-:|
@@ -22,14 +24,14 @@
 #### 3. Document Operation
 |cmd|note|
 |:--:|:--:|
-|`ls -a`|list|
-|`cd [path]`|. (cur) <br> .. (back) <br> / (root) <br> ~ (home)|
+|`ls`|list `-a` `-l`|
+|`cd [path]`|change directory -  . (cur) <br> .. (back) <br> / (root) <br> ~ (home)|
 |`mkdir [dir name]`|make|
 |`rmdir [dir name]`|remove|
 |`touch [doc name]`|make|
 |`rm [doc name]`|delete|
 |`cat [doc name]`|read|
-|`less [doc name]`|scroll read `q` quit|
+|`less [doc name]`|`[cmd 2>&1]\|less`scroll output <br> `q` quit|
 |`vim [doc name]`|edit|
 |`cp [src doc] [dist doc]`|copy|
 |`mv [src doc] [dist doc]`|move / rename|
@@ -38,13 +40,15 @@
 |`open`|html|
 |`clear`||
 
-#### 4. Compile & Run
+#### 4. Compile & Run C
 |cmd|note|
 |:-:|:-:|
-|`gcc [src].c -o [out]`|compile|
+|**Stage**|
+|`gcc -E hello.c -o hello.i` (`-E` Preprocessing) <br> `gcc -S hello.c -o hello.s` (`-S` Compilation) <br> `gcc -c hello.c -o hello.o` (`-c` Assembly) <br> `gcc hello.c -o hello` (Linking)| `gcc [src1] [src2] ... -o [out]` (`-c .c``.o -o`in a way) <br> `-E/-S/-c [src]` (out file stage) <br> `-o [out]` (out file name)|
 |`./[out]`|run|
-|`gcc -g [src].c -o [out]`|compile with debug|
-|`gcc -wall [src].c -o [out]`|compile with warning|
+|**Insert**|`gcc -Wall -g -c hello.c`|
+|`-g`|debug info|
+|`-Wall`|warning|
 
 #### 5. Process Management
 |cmd|note|
@@ -60,15 +64,15 @@
 
 ## 2. Virtual Machine
 
-1. **Configure:** VitualBox - Ubuntu ISO (CD drive) - Install Ubuntu
+1. **Configure:** VitualBox - Ubuntu ISO (CD drive) - Install
 2. **Test**
 
 |content|cmd|
 |:-:|:-:|
 |**Network**|`ping -c 4 baidu.com`|
 |**SystemUpdate**|`sudo apt update` <br> `sudo apt upgrade -y`|
-|**InstallTool**|`sudo apt install build-esstential -y` <br> `sudo apt install gdb valgrind -y` <br> `sudo apt install vim -y`|
-|**verify**|`gcc --version` <br> `g++ --version` <br> `make --version`|
+|**InstallTool**|`sudo apt install [tool name] -y` <br> `build-esstential` (compile) <br> `gdb valgrind` (debug) <br> `vim ` (edit) <br> `make` (auto build)|
+|**Verify**|`gcc --version` <br> `g++ --version` <br> `make --version`|
 
 ## 3. Vim
 
@@ -99,7 +103,7 @@
 
 1. **default** `etc/nginx/sites-available/default` -- `var/www/html/index.nginx-debian.html`
 2. **web addr (IP + port + doc)**: http://127.0.0.1:8080
-3. **personal configure**`:  sudo vim /etc/nginx/sites-enabled/default`: root /var/www/html -- root /home/[user dir]/[new dir]
+3. **personal configure**: `sudo vim /etc/nginx/sites-enabled/default`: `root /var/www/html` -- `root /home/[user dir]/[new dir]`
 4. **reload**: `sudo nginx -t`, `sudo systemctl reload nginx`
 5. **permission**: `sudo chmod o+x /home/[name]`
 
@@ -124,3 +128,58 @@
 |`git clone git@github.com:[name]/[repo name].git`|**clone** to server|
 |`git pull`||
 |`git checkout`|discard not committed|
+
+## 6. Make
+* **Rule Edit**
+
+**1. base** 
+```
+# Makefile
+exe:src1.c src2.c header.h
+    gcc src1.c src2.c -o exe
+```
+**2. template**
+
+```
+# Makefile
+# Configure Field (Modify)
+CC = gcc                # compiler
+CFLAGS = -Wall -g       # warning + debug
+TARGETS = main child     # out files name
+HEADERS = common.h      # pulic header file
+MAIN_EXE = main         # run file
+
+# Rule Field (Tab)
+.PHONY: all clean run
+
+all: $(TARGETS)         #default dest
+
+%: %.c $(HEADERS)		# `make (xxxx)`
+    $(CC) $(CFLAGS) $< -o $@
+
+clean:
+    rm -f $(TARGETS)
+
+run: all
+    ./$(MAIN_EXE)
+```
+
+* **Pack Build**
+
+|cmd (defined)|op|
+|:-:|:-:|
+|`make`|compile all|
+|`make clean`|clean all|
+|`make run`|run all|
+|`make [out]`|run one|
+
+## 7. tmux
+
+* **Enter** `Ctrl + B`
+
+|op|cmd|
+|:-:|:-:|
+|horizontal|`%`|
+|vertical|`"`|
+|switch window|`[arrow key]`|
+|close|`exit`|
